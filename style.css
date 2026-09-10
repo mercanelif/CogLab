@@ -24,3 +24,8 @@ button {
 .hidden {
     display: none;
 }
+
+#resultsList {
+    list-style: none;
+    padding: 0;
+}
