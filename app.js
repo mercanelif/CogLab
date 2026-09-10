@@ -4,7 +4,8 @@ const stimulus = document.getElementById("stimulus");
 const progressText = document.getElementById("progress");
 const resultsList = document.getElementById("resultsList");
 
-
+const downloadJsonButton =
+    document.getElementById("downloadJsonButton");
 const TOTAL_TRIALS = 5;
 
 let currentTrial = 0;
@@ -24,6 +25,8 @@ function startExperiment() {
     waitingForResponse = false;
 
     startButton.disabled = true;
+
+    downloadJsonButton.disabled = true;
 
     resultsList.innerHTML = "";
 
@@ -140,6 +143,7 @@ function finishExperiment() {
     experimentActive = false;
 
     startButton.disabled = false;
+    downloadJsonButton.disabled = false;
 
     const meanReactionTime =
         calculateMeanReactionTime();
@@ -168,6 +172,39 @@ function calculateMeanReactionTime() {
     return total / results.length;
 }
 
+function downloadResultsAsJSON() {
+
+    if (results.length === 0) {
+        return;
+    }
+
+    const resultsJSON =
+        JSON.stringify(results, null, 2);
+
+    const blob = new Blob(
+        [resultsJSON],
+        { type: "application/json" }
+    );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "reaction-time-results.json";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
 
 startButton.addEventListener(
     "click",
@@ -177,4 +214,9 @@ startButton.addEventListener(
 document.addEventListener(
     "keydown",
     handleKeyDown
+);
+
+downloadJsonButton.addEventListener(
+    "click",
+    downloadResultsAsJSON
 );
