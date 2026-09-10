@@ -147,6 +147,14 @@ function finishExperiment() {
     statusText.textContent =
         `Experiment complete! Mean reaction time: ` +
         `${Math.round(meanReactionTime)} ms`;
+
+    console.log("Results array:");
+    console.log(results);
+
+    const resultsJSON = JSON.stringify(results, null, 2);
+
+    console.log("Results as JSON:");
+    console.log(resultsJSON);
 }
 
 
