@@ -15,10 +15,11 @@
 
         <h1>CogLab</h1>
 
-        <h2>Reaction Time Experiment</h2>
+        <h2>Variable Foreperiod Experiment</h2>
 
         <p>
-            Press the button to start the experiment.
+        Press SPACE when the green circle appears.
+        You will complete two timing conditions.
         </p>
 
         <button id="startButton">
@@ -26,6 +27,10 @@
         </button>
 
         <div id="stimulus" class="stimulus hidden"></div>
+
+        <p id="conditionInfo">
+        Block: Not started
+        </p>
 
         <p id="status">
             Ready.
@@ -40,7 +45,7 @@
         <button id="downloadJsonButton" disabled>
         Download JSON
         </button>
-        
+
     </main>
 
     <script src="app.js"></script>

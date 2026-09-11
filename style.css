@@ -33,3 +33,11 @@ button {
 #downloadJsonButton {
     margin-top: 20px;
 }
+
+#conditionInfo {
+    font-weight: bold;
+}
+
+#status {
+    white-space: pre-line;
+}
