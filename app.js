@@ -4,9 +4,12 @@ const stimulus = document.getElementById("stimulus");
 const progressText = document.getElementById("progress");
 const resultsList = document.getElementById("resultsList");
 const conditionInfo = document.getElementById("conditionInfo");
+
 const downloadJsonButton =
     document.getElementById("downloadJsonButton");
 
+const downloadCsvButton =
+    document.getElementById("downloadCsvButton");
 
 const TRIALS_PER_CONDITION = 10;
 
@@ -65,7 +68,7 @@ function startExperiment() {
 
     startButton.disabled = true;
     downloadJsonButton.disabled = true;
-
+    downloadCsvButton.disabled = true;
     resultsList.innerHTML = "";
 
     progressText.textContent =
@@ -311,7 +314,7 @@ function finishExperiment() {
 
     startButton.disabled = false;
     downloadJsonButton.disabled = false;
-
+    downloadCsvButton.disabled = false;
     const fixedMean =
         calculateMeanForCondition("fixed");
 
@@ -426,4 +429,70 @@ document.addEventListener(
 downloadJsonButton.addEventListener(
     "click",
     downloadResultsAsJSON
+);
+
+function downloadResultsAsCSV() {
+
+    if (results.length === 0) {
+        return;
+    }
+
+    const header = [
+        "trial",
+        "block",
+        "trialInBlock",
+        "condition",
+        "foreperiod",
+        "reactionTime"
+    ];
+
+    const rows = [];
+
+    rows.push(header.join(","));
+
+    for (const result of results) {
+
+        const row = [
+            result.trial,
+            result.block,
+            result.trialInBlock,
+            result.condition,
+            result.foreperiod,
+            result.reactionTime
+        ];
+
+        rows.push(row.join(","));
+    }
+
+    const csvContent =
+        rows.join("\n");
+
+    const blob =
+        new Blob(
+            [csvContent],
+            { type: "text/csv" }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "variable-foreperiod-results.csv";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
+downloadCsvButton.addEventListener(
+    "click",
+    downloadResultsAsCSV
 );

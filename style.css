@@ -30,7 +30,8 @@ button {
     padding: 0;
 }
 
-#downloadJsonButton {
+#downloadJsonButton,
+#downloadCsvButton {
     margin-top: 20px;
 }
 
