@@ -31,6 +31,8 @@ const downloadCsvButton =
 // EXPERIMENT SETTINGS
 // ======================================================
 
+const PRACTICE_TRIALS = 3;
+
 const TRIALS_PER_CONDITION = 10;
 
 const FIXED_FOREPERIOD = 3000;
@@ -53,8 +55,12 @@ const TOTAL_TRIALS =
 
 
 // ======================================================
-// EXPERIMENT STATE
+// STATE
 // ======================================================
+
+let experimentPhase = "ready";
+
+let currentPracticeTrial = 0;
 
 let currentTrial = 0;
 
@@ -82,10 +88,163 @@ let timerId = null;
 
 
 // ======================================================
-// START EXPERIMENT
+// START BUTTON CONTROLLER
+// ======================================================
+
+function handleStartButton() {
+
+    if (
+        experimentPhase === "ready"
+        ||
+        experimentPhase === "complete"
+    ) {
+
+        startPractice();
+
+        return;
+    }
+
+    if (
+        experimentPhase === "practice-complete"
+    ) {
+
+        startExperiment();
+    }
+}
+
+
+// ======================================================
+// START PRACTICE
+// ======================================================
+
+function startPractice() {
+
+    experimentPhase = "practice";
+
+    currentPracticeTrial = 0;
+
+    results = [];
+
+    experimentActive = true;
+
+    waitingForResponse = false;
+
+    startButton.disabled = true;
+
+    downloadJsonButton.disabled = true;
+
+    downloadCsvButton.disabled = true;
+
+    resultsList.innerHTML = "";
+
+    conditionInfo.textContent =
+        "Practice phase";
+
+    statusText.textContent =
+        "Practice trials are starting.";
+
+    progressText.textContent =
+        `Practice 0 / ${PRACTICE_TRIALS}`;
+
+    preparePracticeTrial();
+}
+
+
+// ======================================================
+// PREPARE PRACTICE TRIAL
+// ======================================================
+
+function preparePracticeTrial() {
+
+    stimulus.classList.add("hidden");
+
+    waitingForResponse = false;
+
+    statusText.textContent =
+        "Practice: wait for the green circle...";
+
+    const practiceForeperiod =
+        Math.floor(
+            Math.random() * 2001
+        ) + 1000;
+
+    currentForeperiod =
+        practiceForeperiod;
+
+    timerId =
+        setTimeout(
+            showPracticeStimulus,
+            practiceForeperiod
+        );
+}
+
+
+// ======================================================
+// SHOW PRACTICE STIMULUS
+// ======================================================
+
+function showPracticeStimulus() {
+
+    currentPracticeTrial =
+        currentPracticeTrial + 1;
+
+    stimulus.classList.remove("hidden");
+
+    stimulusStartTime =
+        performance.now();
+
+    waitingForResponse = true;
+
+    progressText.textContent =
+        `Practice ${currentPracticeTrial} / ` +
+        `${PRACTICE_TRIALS}`;
+
+    statusText.textContent =
+        "Practice: press SPACE!";
+}
+
+
+// ======================================================
+// FINISH PRACTICE
+// ======================================================
+
+function finishPractice() {
+
+    experimentActive = false;
+
+    waitingForResponse = false;
+
+    experimentPhase =
+        "practice-complete";
+
+    stimulus.classList.add("hidden");
+
+    conditionInfo.textContent =
+        "Practice complete";
+
+    statusText.textContent =
+        "Practice complete!\n" +
+        "When you are ready, begin the real experiment.";
+
+    progressText.textContent =
+        `Practice ${PRACTICE_TRIALS} / ` +
+        `${PRACTICE_TRIALS}`;
+
+    startButton.textContent =
+        "Begin Experiment";
+
+    startButton.disabled = false;
+}
+
+
+// ======================================================
+// START REAL EXPERIMENT
 // ======================================================
 
 function startExperiment() {
+
+    experimentPhase =
+        "experiment";
 
     currentTrial = 0;
 
@@ -119,7 +278,6 @@ function startExperiment() {
     statusText.textContent =
         "Experiment started.";
 
-    // Randomize block order.
     if (Math.random() < 0.5) {
 
         conditionOrder = [
@@ -150,9 +308,9 @@ function startCondition() {
 
     currentTrialInCondition = 0;
 
-    // Shuffle the balanced foreperiod list
-    // when entering the random condition.
-    if (currentCondition === "random") {
+    if (
+        currentCondition === "random"
+    ) {
 
         randomForeperiods =
             shuffleArray(
@@ -162,7 +320,9 @@ function startCondition() {
 
     let conditionLabel;
 
-    if (currentCondition === "fixed") {
+    if (
+        currentCondition === "fixed"
+    ) {
 
         conditionLabel =
             "Fixed interval";
@@ -182,7 +342,7 @@ function startCondition() {
 
 
 // ======================================================
-// PREPARE TRIAL
+// PREPARE EXPERIMENTAL TRIAL
 // ======================================================
 
 function prepareNextTrial() {
@@ -211,7 +371,9 @@ function prepareNextTrial() {
 
 function getForeperiod() {
 
-    if (currentCondition === "fixed") {
+    if (
+        currentCondition === "fixed"
+    ) {
 
         return FIXED_FOREPERIOD;
     }
@@ -223,7 +385,7 @@ function getForeperiod() {
 
 
 // ======================================================
-// SHOW STIMULUS
+// SHOW EXPERIMENTAL STIMULUS
 // ======================================================
 
 function showStimulus() {
@@ -255,30 +417,33 @@ function showStimulus() {
 
 function handleKeyDown(event) {
 
-    // Ignore every key except Space.
-    if (event.code !== "Space") {
+    if (
+        event.code !== "Space"
+    ) {
 
         return;
     }
 
-    // Prevent a held Space key from generating
-    // repeated responses.
-    if (event.repeat) {
+    if (
+        event.repeat
+    ) {
 
         return;
     }
 
     event.preventDefault();
 
-    // Ignore Space if experiment is not active.
-    if (!experimentActive) {
+    if (
+        !experimentActive
+    ) {
 
         return;
     }
 
-    // Premature response:
-    // Space was pressed before stimulus appeared.
-    if (!waitingForResponse) {
+    // Premature response.
+    if (
+        !waitingForResponse
+    ) {
 
         clearTimeout(timerId);
 
@@ -287,11 +452,8 @@ function handleKeyDown(event) {
         stimulus.classList.add("hidden");
 
         statusText.textContent =
-            "Too early! Experiment stopped.\n" +
-            "Press Start Experiment to try again.";
-
-        conditionInfo.textContent =
-            "Experiment stopped";
+            "Too early!\n" +
+            "Please restart this phase.";
 
         startButton.disabled = false;
 
@@ -299,8 +461,33 @@ function handleKeyDown(event) {
 
         downloadCsvButton.disabled = true;
 
+        if (
+            experimentPhase === "practice"
+        ) {
+
+            experimentPhase = "ready";
+
+            startButton.textContent =
+                "Restart Practice";
+
+            conditionInfo.textContent =
+                "Practice stopped";
+
+        } else {
+
+            experimentPhase =
+                "practice-complete";
+
+            startButton.textContent =
+                "Restart Experiment";
+
+            conditionInfo.textContent =
+                "Experiment stopped";
+        }
+
         return;
     }
+
 
     const responseTime =
         performance.now();
@@ -315,7 +502,44 @@ function handleKeyDown(event) {
             reactionTime
         );
 
-    // One trial = one object.
+
+    // --------------------------------------
+    // PRACTICE RESPONSE
+    // --------------------------------------
+
+    if (
+        experimentPhase === "practice"
+    ) {
+
+        stimulus.classList.add("hidden");
+
+        waitingForResponse = false;
+
+        statusText.textContent =
+            `Practice RT: ` +
+            `${roundedReactionTime} ms`;
+
+        if (
+            currentPracticeTrial
+            <
+            PRACTICE_TRIALS
+        ) {
+
+            preparePracticeTrial();
+
+        } else {
+
+            finishPractice();
+        }
+
+        return;
+    }
+
+
+    // --------------------------------------
+    // EXPERIMENTAL RESPONSE
+    // --------------------------------------
+
     const trialResult = {
 
         trial:
@@ -337,21 +561,22 @@ function handleKeyDown(event) {
             roundedReactionTime
     };
 
-    // Add this trial object
-    // to the results array.
+
     results.push(
         trialResult
     );
+
 
     stimulus.classList.add("hidden");
 
     waitingForResponse = false;
 
+
     displayTrialResult(
         trialResult
     );
 
-    // Continue current block.
+
     if (
         currentTrialInCondition
         <
@@ -360,7 +585,6 @@ function handleKeyDown(event) {
 
         prepareNextTrial();
 
-    // Move to second block.
     } else if (
         currentBlockIndex
         <
@@ -372,7 +596,6 @@ function handleKeyDown(event) {
 
         startCondition();
 
-    // Both blocks are complete.
     } else {
 
         finishExperiment();
@@ -381,7 +604,7 @@ function handleKeyDown(event) {
 
 
 // ======================================================
-// DISPLAY ONE TRIAL RESULT
+// DISPLAY TRIAL RESULT
 // ======================================================
 
 function displayTrialResult(
@@ -404,7 +627,7 @@ function displayTrialResult(
 
 
 // ======================================================
-// GET REACTION TIMES FOR ONE CONDITION
+// GET REACTION TIMES BY CONDITION
 // ======================================================
 
 function getReactionTimesForCondition(
@@ -413,7 +636,9 @@ function getReactionTimesForCondition(
 
     const reactionTimes = [];
 
-    for (const result of results) {
+    for (
+        const result of results
+    ) {
 
         if (
             result.condition
@@ -437,14 +662,18 @@ function getReactionTimesForCondition(
 
 function calculateMean(values) {
 
-    if (values.length === 0) {
+    if (
+        values.length === 0
+    ) {
 
         return 0;
     }
 
     let total = 0;
 
-    for (const value of values) {
+    for (
+        const value of values
+    ) {
 
         total =
             total + value;
@@ -464,13 +693,13 @@ function calculateMean(values) {
 
 function calculateMedian(values) {
 
-    if (values.length === 0) {
+    if (
+        values.length === 0
+    ) {
 
         return 0;
     }
 
-    // Copy the array before sorting,
-    // so the original data is not changed.
     const sortedValues =
         [...values].sort(
             (a, b) => a - b
@@ -481,8 +710,6 @@ function calculateMedian(values) {
             sortedValues.length / 2
         );
 
-    // Even number of values:
-    // average the two middle values.
     if (
         sortedValues.length % 2 === 0
     ) {
@@ -498,8 +725,6 @@ function calculateMedian(values) {
         ) / 2;
     }
 
-    // Odd number of values:
-    // return the middle value.
     return sortedValues[
         middleIndex
     ];
@@ -514,7 +739,9 @@ function calculateSampleStandardDeviation(
     values
 ) {
 
-    if (values.length < 2) {
+    if (
+        values.length < 2
+    ) {
 
         return 0;
     }
@@ -526,13 +753,17 @@ function calculateSampleStandardDeviation(
 
     let squaredDifferenceTotal = 0;
 
-    for (const value of values) {
+    for (
+        const value of values
+    ) {
 
         const difference =
             value - mean;
 
         const squaredDifference =
-            difference * difference;
+            difference
+            *
+            difference;
 
         squaredDifferenceTotal =
             squaredDifferenceTotal
@@ -540,7 +771,6 @@ function calculateSampleStandardDeviation(
             squaredDifference;
     }
 
-    // Sample variance uses n - 1.
     const variance =
         squaredDifferenceTotal
         /
@@ -560,15 +790,19 @@ function finishExperiment() {
 
     experimentActive = false;
 
+    experimentPhase =
+        "complete";
+
     startButton.disabled = false;
+
+    startButton.textContent =
+        "Start New Session";
 
     downloadJsonButton.disabled = false;
 
     downloadCsvButton.disabled = false;
 
 
-    // Separate reaction times
-    // by experimental condition.
     const fixedReactionTimes =
         getReactionTimesForCondition(
             "fixed"
@@ -580,7 +814,6 @@ function finishExperiment() {
         );
 
 
-    // Fixed condition statistics.
     const fixedMean =
         calculateMean(
             fixedReactionTimes
@@ -597,7 +830,6 @@ function finishExperiment() {
         );
 
 
-    // Random condition statistics.
     const randomMean =
         calculateMean(
             randomReactionTimes
@@ -620,7 +852,6 @@ function finishExperiment() {
         fixedMean;
 
 
-    // Show summary statistics.
     statusText.textContent =
         "Experiment complete!\n\n" +
 
@@ -646,43 +877,11 @@ function finishExperiment() {
 
 
     console.log(
-        "Fixed reaction times:"
-    );
-
-    console.log(
-        fixedReactionTimes
-    );
-
-    console.log(
-        "Random reaction times:"
-    );
-
-    console.log(
-        randomReactionTimes
-    );
-
-    console.log(
         "Results array:"
     );
 
     console.log(
         results
-    );
-
-
-    const resultsJSON =
-        JSON.stringify(
-            results,
-            null,
-            2
-        );
-
-    console.log(
-        "Results as JSON:"
-    );
-
-    console.log(
-        resultsJSON
     );
 }
 
@@ -693,8 +892,6 @@ function finishExperiment() {
 
 function shuffleArray(array) {
 
-    // Make a copy so the original
-    // array is not modified.
     const shuffled =
         array.slice();
 
@@ -734,7 +931,9 @@ function shuffleArray(array) {
 
 function downloadResultsAsJSON() {
 
-    if (results.length === 0) {
+    if (
+        results.length === 0
+    ) {
 
         return;
     }
@@ -793,7 +992,9 @@ function downloadResultsAsJSON() {
 
 function downloadResultsAsCSV() {
 
-    if (results.length === 0) {
+    if (
+        results.length === 0
+    ) {
 
         return;
     }
@@ -813,7 +1014,9 @@ function downloadResultsAsCSV() {
         header.join(",")
     );
 
-    for (const result of results) {
+    for (
+        const result of results
+    ) {
 
         const row = [
             result.trial,
@@ -879,7 +1082,7 @@ function downloadResultsAsCSV() {
 
 startButton.addEventListener(
     "click",
-    startExperiment
+    handleStartButton
 );
 
 document.addEventListener(
