@@ -22,19 +22,74 @@ const resultsList =
 // TRIAL DATA
 // ========================================
 
-const trials = [
-    {
-        word: "GREEN",
-        inkColor: "green",
-        condition: "congruent"
-    },
-    {
-        word: "RED",
-        inkColor: "blue",
-        condition: "incongruent"
-    }
-];
+let trials = [];
+function generateStroopTrials() {
 
+    const colors = [
+        "red",
+        "green",
+        "blue"
+    ];
+
+    const generatedTrials = [];
+
+    // Generate congruent trials.
+    for (const color of colors) {
+
+        for (let i = 0; i < 4; i++) {
+
+            generatedTrials.push({
+                word: color.toUpperCase(),
+                inkColor: color,
+                condition: "congruent"
+            });
+        }
+    }
+
+    // Generate incongruent trials.
+    for (const word of colors) {
+
+        for (const inkColor of colors) {
+
+            if (word !== inkColor) {
+
+                for (let i = 0; i < 2; i++) {
+
+                    generatedTrials.push({
+                        word: word.toUpperCase(),
+                        inkColor: inkColor,
+                        condition: "incongruent"
+                    });
+                }
+            }
+        }
+    }
+
+    return shuffleArray(generatedTrials);
+}
+function shuffleArray(array) {
+
+    const shuffled = [...array];
+
+    for (
+        let i = shuffled.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j = Math.floor(
+            Math.random() * (i + 1)
+        );
+
+        const temporary = shuffled[i];
+
+        shuffled[i] = shuffled[j];
+
+        shuffled[j] = temporary;
+    }
+
+    return shuffled;
+}
 
 // ========================================
 // EXPERIMENT STATE
@@ -62,6 +117,8 @@ function startExperiment() {
     currentTrial = 0;
 
     results = [];
+    
+    trials = generateStroopTrials();
 
     experimentActive = true;
 
