@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CogLab - Stroop Experiment</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1>CogLab</h1>
+
+        <h2>Stroop Experiment</h2>
+
+        <p>
+            Respond to the INK COLOR,
+            not the written word.
+        </p>
+
+        <p>
+            R = Red |
+            G = Green |
+            B = Blue
+        </p>
+
+        <button id="startStroopButton">
+            Start Stroop
+        </button>
+
+        <div
+            id="wordStimulus"
+            class="stroop-word hidden">
+        </div>
+
+        <p id="status">
+            Ready.
+        </p>
+
+        <p id="progress">
+            Trial 0 / 2
+        </p>
+
+        <ul id="resultsList"></ul>
+
+    </main>
+
+    <script src="stroop.js"></script>
+
+</body>
+
+</html>
