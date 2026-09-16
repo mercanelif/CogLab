@@ -233,3 +233,17 @@ button:disabled {
         margin-right: 0;
     }
 }
+/* =========================
+   STROOP EXPERIMENT
+========================= */
+
+.stroop-word {
+    font-size: 64px;
+    font-weight: 800;
+
+    margin: 50px auto;
+
+    text-align: center;
+
+    min-height: 80px;
+}
