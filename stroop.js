@@ -17,6 +17,11 @@ const progressText =
 const resultsList =
     document.getElementById("resultsList");
 
+const statisticsSection =
+    document.getElementById("statistics");
+
+const statisticsContent =
+    document.getElementById("statisticsContent");
 
 // ========================================
 // TRIAL DATA
@@ -161,6 +166,10 @@ let timerId = null;
 
 function startPractice() {
 
+    statisticsSection.classList.add("hidden");
+
+    statisticsContent.textContent = "";
+
     clearTimeout(timerId);
 
     experimentPhase = "practice";
@@ -211,19 +220,22 @@ function handleStartButton() {
         startExperiment();
     }
 }
-
 // ========================================
 // START EXPERIMENT
 // ========================================
 
 function startExperiment() {
-   
+
+    statisticsSection.classList.add("hidden");
+
+    statisticsContent.textContent = "";
+
     experimentPhase = "experiment";
 
     currentTrial = 0;
 
     results = [];
-    
+
     trials = generateStroopTrials();
 
     experimentActive = true;
@@ -457,6 +469,214 @@ function finishPractice() {
         `Practice ${practiceTrials.length} / ` +
         `${practiceTrials.length}`;
 }
+
+// ========================================
+// STATISTICS - MEAN
+// ========================================
+
+function calculateMean(values) {
+
+    // An empty array has no mean.
+    if (values.length === 0) {
+        return null;
+    }
+
+    // Add all values together.
+    const total = values.reduce(
+        (sum, value) => sum + value,
+        0
+    );
+
+    // Divide by the number of values.
+    return total / values.length;
+}
+
+// ========================================
+// STATISTICS - MEDIAN
+// ========================================
+
+function calculateMedian(values) {
+
+    // An empty array has no median.
+    if (values.length === 0) {
+        return null;
+    }
+
+    // Create a sorted copy of the array.
+    const sorted = [...values].sort(
+        (a, b) => a - b
+    );
+
+    const middle = Math.floor(
+        sorted.length / 2
+    );
+
+    // Odd number of values.
+    if (sorted.length % 2 !== 0) {
+
+        return sorted[middle];
+
+    }
+
+    // Even number of values.
+    return (
+        sorted[middle - 1] +
+        sorted[middle]
+    ) / 2;
+}
+// ========================================
+// STATISTICS - SAMPLE STANDARD DEVIATION
+// ========================================
+
+function calculateSampleStandardDeviation(values) {
+
+    // At least 2 values are required.
+    if (values.length < 2) {
+        return null;
+    }
+
+    const mean = calculateMean(values);
+
+    let squaredDifferenceSum = 0;
+
+    for (const value of values) {
+
+        const difference = value - mean;
+
+        squaredDifferenceSum += difference * difference;
+    }
+
+    const sampleVariance =
+        squaredDifferenceSum / (values.length - 1);
+
+    return Math.sqrt(sampleVariance);
+}
+// ========================================
+// STATISTICS - CONDITION SUMMARY
+// ========================================
+
+function calculateConditionStats(data, condition) {
+
+    // Select trials belonging to this condition.
+    const conditionTrials = data.filter(
+        trial => trial.condition === condition
+    );
+
+    // Select only correct responses.
+    const correctTrials = conditionTrials.filter(
+        trial => trial.correct === true
+    );
+
+    // Extract reaction times from correct trials.
+    const reactionTimes = correctTrials.map(
+        trial => trial.reactionTime
+    );
+
+    // Count trials.
+    const totalTrials = conditionTrials.length;
+
+    const correctCount = correctTrials.length;
+
+    // Calculate accuracy.
+    const accuracy = totalTrials > 0
+        ? (correctCount / totalTrials) * 100
+        : null;
+
+    // Return the statistical summary.
+    return {
+        condition: condition,
+        totalTrials: totalTrials,
+        correctTrials: correctCount,
+        accuracy: accuracy,
+        meanRT: calculateMean(reactionTimes),
+        medianRT: calculateMedian(reactionTimes),
+        sdRT: calculateSampleStandardDeviation(reactionTimes)
+    };
+}
+
+// ========================================
+// STATISTICS - STROOP EFFECT
+// ========================================
+
+function calculateStroopEffect(data) {
+
+    // Calculate statistics for each condition.
+    const congruentStats =
+        calculateConditionStats(data, "congruent");
+
+    const incongruentStats =
+        calculateConditionStats(data, "incongruent");
+
+    // Get mean reaction times.
+    const congruentMean = congruentStats.meanRT;
+
+    const incongruentMean = incongruentStats.meanRT;
+
+    // Both means are required.
+    if (
+        congruentMean === null ||
+        incongruentMean === null
+    ) {
+        return null;
+    }
+
+    // Calculate Stroop interference.
+    return incongruentMean - congruentMean;
+}
+
+// ========================================
+// DISPLAY STATISTICS
+// ========================================
+
+function displayStatistics() {
+
+    // Calculate statistics for both conditions.
+    const congruent =
+        calculateConditionStats(results, "congruent");
+
+    const incongruent =
+        calculateConditionStats(results, "incongruent");
+
+    const stroopEffect =
+        calculateStroopEffect(results);
+
+    // Format numbers for display.
+    function formatValue(value, unit = "") {
+
+        if (value === null) {
+            return "N/A";
+        }
+
+        return value.toFixed(1) + unit;
+    }
+
+    // Build the results text.
+    statisticsContent.textContent = [
+        "CONGRUENT CONDITION",
+        `Accuracy: ${formatValue(congruent.accuracy, "%")}`,
+        `Mean RT: ${formatValue(congruent.meanRT, " ms")}`,
+        `Median RT: ${formatValue(congruent.medianRT, " ms")}`,
+        `SD: ${formatValue(congruent.sdRT, " ms")}`,
+
+        "",
+
+        "INCONGRUENT CONDITION",
+        `Accuracy: ${formatValue(incongruent.accuracy, "%")}`,
+        `Mean RT: ${formatValue(incongruent.meanRT, " ms")}`,
+        `Median RT: ${formatValue(incongruent.medianRT, " ms")}`,
+        `SD: ${formatValue(incongruent.sdRT, " ms")}`,
+
+        "",
+
+        "STROOP EFFECT",
+        `Mean RT Difference: ${formatValue(stroopEffect, " ms")}`
+
+    ].join("\n");
+
+    // Make the statistics visible.
+    statisticsSection.classList.remove("hidden");
+}
+
 // ========================================
 // FINISH EXPERIMENT
 // ========================================
@@ -464,7 +684,7 @@ function finishPractice() {
 function finishExperiment() {
 
     experimentPhase = "complete";
-    
+
     experimentActive = false;
 
     waitingForResponse = false;
@@ -485,6 +705,8 @@ function finishExperiment() {
     statusText.textContent =
         `Experiment complete! ` +
         `${correctCount} / ${results.length} correct.`;
+
+    displayStatistics();
 
     console.log("Stroop results:", results);
 }
