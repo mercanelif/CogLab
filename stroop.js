@@ -24,6 +24,19 @@ const statisticsContent =
     document.getElementById("statisticsContent");
 
 // ========================================
+// EXPORT ELEMENTS
+// ========================================
+
+const exportControls =
+    document.getElementById("exportControls");
+
+const downloadJsonButton =
+    document.getElementById("downloadStroopJson");
+
+const downloadCsvButton =
+    document.getElementById("downloadStroopCsv");
+
+// ========================================
 // TRIAL DATA
 // ========================================
 
@@ -170,6 +183,8 @@ function startPractice() {
 
     statisticsContent.textContent = "";
 
+    exportControls.classList.add("hidden");
+
     clearTimeout(timerId);
 
     experimentPhase = "practice";
@@ -229,6 +244,8 @@ function startExperiment() {
     statisticsSection.classList.add("hidden");
 
     statisticsContent.textContent = "";
+
+    exportControls.classList.add("hidden");
 
     experimentPhase = "experiment";
 
@@ -678,6 +695,177 @@ function displayStatistics() {
 }
 
 // ========================================
+// JSON EXPORT
+// ========================================
+
+function downloadStroopJson() {
+
+    if (results.length === 0) {
+        return;
+    }
+
+    const congruentStats =
+        calculateConditionStats(
+            results,
+            "congruent"
+        );
+
+    const incongruentStats =
+        calculateConditionStats(
+            results,
+            "incongruent"
+        );
+
+    const stroopEffect =
+        calculateStroopEffect(results);
+
+    const exportData = {
+
+        experiment: "Stroop",
+
+        exportedAt:
+            new Date().toISOString(),
+
+        totalTrials:
+            results.length,
+
+        statistics: {
+
+            congruent:
+                congruentStats,
+
+            incongruent:
+                incongruentStats,
+
+            stroopEffect:
+                stroopEffect
+        },
+
+        trials:
+            results
+    };
+
+    const json =
+        JSON.stringify(
+            exportData,
+            null,
+            2
+        );
+
+    const blob =
+        new Blob(
+            [json],
+            {
+                type: "application/json"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "coglab-stroop-results.json";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(url);
+}
+
+// ========================================
+// CSV EXPORT
+// ========================================
+
+function downloadStroopCsv() {
+
+    if (results.length === 0) {
+        return;
+    }
+
+    const headers = [
+        "trial",
+        "word",
+        "inkColor",
+        "condition",
+        "response",
+        "correct",
+        "reactionTime"
+    ];
+
+    const rows = results.map(result => [
+        result.trial,
+        result.word,
+        result.inkColor,
+        result.condition,
+        result.response,
+        result.correct,
+        result.reactionTime
+    ]);
+
+    const escapeCsvValue = value => {
+
+        const text = String(value);
+
+        if (
+            text.includes(",") ||
+            text.includes('"') ||
+            text.includes("\n")
+        ) {
+            return `"${text.replace(/"/g, '""')}"`;
+        }
+
+        return text;
+    };
+
+    const csvRows = [
+        headers,
+        ...rows
+    ];
+
+    const csvContent = csvRows
+        .map(row =>
+            row
+                .map(escapeCsvValue)
+                .join(",")
+        )
+        .join("\n");
+
+    const blob = new Blob(
+        [csvContent],
+        {
+            type: "text/csv;charset=utf-8"
+        }
+    );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "coglab-stroop-results.csv";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(url);
+}
+
+// ========================================
 // FINISH EXPERIMENT
 // ========================================
 
@@ -708,6 +896,8 @@ function finishExperiment() {
 
     displayStatistics();
 
+    exportControls.classList.remove("hidden");
+
     console.log("Stroop results:", results);
 }
 
@@ -724,4 +914,14 @@ startButton.addEventListener(
 document.addEventListener(
     "keydown",
     handleKeyDown
+);
+
+downloadJsonButton.addEventListener(
+    "click",
+    downloadStroopJson
+);
+
+downloadCsvButton.addEventListener(
+    "click",
+    downloadStroopCsv
 );
