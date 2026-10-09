@@ -1,0 +1,244 @@
+{
+  "experiment": "Stroop",
+  "exportedAt": "2026-09-26T14:25:04.927Z",
+  "totalTrials": 24,
+  "statistics": {
+    "congruent": {
+      "condition": "congruent",
+      "totalTrials": 12,
+      "correctTrials": 12,
+      "accuracy": 100,
+      "meanRT": 539,
+      "medianRT": 556,
+      "sdRT": 71.47790504128467
+    },
+    "incongruent": {
+      "condition": "incongruent",
+      "totalTrials": 12,
+      "correctTrials": 11,
+      "accuracy": 91.66666666666666,
+      "meanRT": 653.9090909090909,
+      "medianRT": 599,
+      "sdRT": 201.73173005030944
+    },
+    "stroopEffect": 114.90909090909088
+  },
+  "trials": [
+    {
+      "trial": 1,
+      "word": "GREEN",
+      "inkColor": "blue",
+      "condition": "incongruent",
+      "response": "blue",
+      "correct": true,
+      "reactionTime": 1008
+    },
+    {
+      "trial": 2,
+      "word": "BLUE",
+      "inkColor": "blue",
+      "condition": "congruent",
+      "response": "blue",
+      "correct": true,
+      "reactionTime": 573
+    },
+    {
+      "trial": 3,
+      "word": "RED",
+      "inkColor": "red",
+      "condition": "congruent",
+      "response": "red",
+      "correct": true,
+      "reactionTime": 558
+    },
+    {
+      "trial": 4,
+      "word": "BLUE",
+      "inkColor": "red",
+      "condition": "incongruent",
+      "response": "red",
+      "correct": true,
+      "reactionTime": 437
+    },
+    {
+      "trial": 5,
+      "word": "BLUE",
+      "inkColor": "blue",
+      "condition": "congruent",
+      "response": "blue",
+      "correct": true,
+      "reactionTime": 608
+    },
+    {
+      "trial": 6,
+      "word": "RED",
+      "inkColor": "blue",
+      "condition": "incongruent",
+      "response": "red",
+      "correct": false,
+      "reactionTime": 666
+    },
+    {
+      "trial": 7,
+      "word": "RED",
+      "inkColor": "green",
+      "condition": "incongruent",
+      "response": "green",
+      "correct": true,
+      "reactionTime": 726
+    },
+    {
+      "trial": 8,
+      "word": "BLUE",
+      "inkColor": "green",
+      "condition": "incongruent",
+      "response": "green",
+      "correct": true,
+      "reactionTime": 537
+    },
+    {
+      "trial": 9,
+      "word": "BLUE",
+      "inkColor": "red",
+      "condition": "incongruent",
+      "response": "red",
+      "correct": true,
+      "reactionTime": 1024
+    },
+    {
+      "trial": 10,
+      "word": "RED",
+      "inkColor": "red",
+      "condition": "congruent",
+      "response": "red",
+      "correct": true,
+      "reactionTime": 499
+    },
+    {
+      "trial": 11,
+      "word": "GREEN",
+      "inkColor": "blue",
+      "condition": "incongruent",
+      "response": "blue",
+      "correct": true,
+      "reactionTime": 402
+    },
+    {
+      "trial": 12,
+      "word": "GREEN",
+      "inkColor": "green",
+      "condition": "congruent",
+      "response": "green",
+      "correct": true,
+      "reactionTime": 498
+    },
+    {
+      "trial": 13,
+      "word": "RED",
+      "inkColor": "green",
+      "condition": "incongruent",
+      "response": "green",
+      "correct": true,
+      "reactionTime": 581
+    },
+    {
+      "trial": 14,
+      "word": "GREEN",
+      "inkColor": "red",
+      "condition": "incongruent",
+      "response": "red",
+      "correct": true,
+      "reactionTime": 623
+    },
+    {
+      "trial": 15,
+      "word": "BLUE",
+      "inkColor": "green",
+      "condition": "incongruent",
+      "response": "green",
+      "correct": true,
+      "reactionTime": 676
+    },
+    {
+      "trial": 16,
+      "word": "GREEN",
+      "inkColor": "green",
+      "condition": "congruent",
+      "response": "green",
+      "correct": true,
+      "reactionTime": 398
+    },
+    {
+      "trial": 17,
+      "word": "BLUE",
+      "inkColor": "blue",
+      "condition": "congruent",
+      "response": "blue",
+      "correct": true,
+      "reactionTime": 511
+    },
+    {
+      "trial": 18,
+      "word": "RED",
+      "inkColor": "red",
+      "condition": "congruent",
+      "response": "red",
+      "correct": true,
+      "reactionTime": 614
+    },
+    {
+      "trial": 19,
+      "word": "RED",
+      "inkColor": "red",
+      "condition": "congruent",
+      "response": "red",
+      "correct": true,
+      "reactionTime": 438
+    },
+    {
+      "trial": 20,
+      "word": "RED",
+      "inkColor": "blue",
+      "condition": "incongruent",
+      "response": "blue",
+      "correct": true,
+      "reactionTime": 580
+    },
+    {
+      "trial": 21,
+      "word": "GREEN",
+      "inkColor": "green",
+      "condition": "congruent",
+      "response": "green",
+      "correct": true,
+      "reactionTime": 554
+    },
+    {
+      "trial": 22,
+      "word": "BLUE",
+      "inkColor": "blue",
+      "condition": "congruent",
+      "response": "blue",
+      "correct": true,
+      "reactionTime": 597
+    },
+    {
+      "trial": 23,
+      "word": "GREEN",
+      "inkColor": "red",
+      "condition": "incongruent",
+      "response": "red",
+      "correct": true,
+      "reactionTime": 599
+    },
+    {
+      "trial": 24,
+      "word": "GREEN",
+      "inkColor": "green",
+      "condition": "congruent",
+      "response": "green",
+      "correct": true,
+      "reactionTime": 620
+    }
+  ]
+}
