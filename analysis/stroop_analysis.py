@@ -1,12 +1,15 @@
 import json
 import math
+from pathlib import Path
 
+import matplotlib.pyplot as plt
 import pandas as pd
 
 
 DATA_PATH = "data/sample/stroop_session_sample.csv"
 JSON_PATH = "data/sample/stroop_session_sample.json"
-
+FIGURE_DIR = Path("analysis/figures")
+FIGURE_DIR.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_csv(DATA_PATH)
 
@@ -196,3 +199,50 @@ if not all_checks_passed:
     )
 
 print("\nOverall reproducibility check: PASS")
+
+condition_order = ["congruent", "incongruent"]
+
+mean_rt_values = rt_stats.loc[condition_order, "mean"]
+
+plt.figure(figsize=(6, 4))
+
+plt.bar(
+    ["Congruent", "Incongruent"],
+    mean_rt_values,
+)
+
+plt.ylabel("Mean Reaction Time (ms)")
+plt.xlabel("Condition")
+plt.title("Stroop Mean Reaction Time by Condition")
+
+plt.tight_layout()
+
+rt_figure_path = FIGURE_DIR / "stroop_mean_rt.png"
+plt.savefig(rt_figure_path, dpi=150)
+
+plt.close()
+
+print(f"\nSaved figure: {rt_figure_path}")
+
+accuracy_values = accuracy_by_condition.loc[condition_order]
+
+plt.figure(figsize=(6, 4))
+
+plt.bar(
+    ["Congruent", "Incongruent"],
+    accuracy_values,
+)
+
+plt.ylabel("Accuracy (%)")
+plt.xlabel("Condition")
+plt.title("Stroop Accuracy by Condition")
+plt.ylim(0, 100)
+
+plt.tight_layout()
+
+accuracy_figure_path = FIGURE_DIR / "stroop_accuracy.png"
+plt.savefig(accuracy_figure_path, dpi=150)
+
+plt.close()
+
+print(f"Saved figure: {accuracy_figure_path}")
