@@ -1,6 +1,6 @@
 # CogLab
 
-**Cognitive Experiments · Behavioral Data · Analysis**
+**Cognitive Experiments · Behavioral Data · Reproducible Analysis**
 
 CogLab is a Computer Science portfolio project at the intersection of
 cognitive science, experimental programming, and behavioral data analysis.
@@ -9,89 +9,129 @@ The project focuses on implementing browser-based cognitive experiments,
 collecting structured trial-level behavioral data, and developing a
 reproducible Python-based analysis workflow for the resulting datasets.
 
-The current implementation includes Reaction Time and Stroop experiments
-built with HTML, CSS, and JavaScript.
+CogLab currently includes Reaction Time and Stroop experiments implemented
+with HTML, CSS, and JavaScript, together with a Python/Pandas analysis
+workflow for exported Stroop data.
+
+---
 
 ## Current Version
 
-**v0.2 — Reaction Time and Stroop Experiment Prototype**
+**v1.0 — CogLab Portfolio MVP**
 
-CogLab currently includes two browser-based cognitive experiments:
+CogLab v1.0 combines browser-based cognitive experimentation with a
+reproducible behavioral-data analysis workflow.
+
+The project currently includes:
 
 - Reaction Time Experiment
 - Stroop Experiment
-
-The Reaction Time Experiment investigates temporal predictability by
-comparing fixed and randomized foreperiod conditions.
-
-The Stroop Experiment investigates cognitive interference by comparing
-congruent and incongruent color-word trials.
-
-Both experiments collect trial-level behavioral data directly in the browser.
-
-The current implementation supports:
-
-- Practice phases
-- Randomized experimental trials
-- Reaction-time measurement using `performance.now()`
-- Condition-specific descriptive statistics
+- Practice and experimental phases
 - Trial-level behavioral data collection
-- JSON and CSV data export
-
-CogLab is currently an educational and portfolio-oriented experimental
-prototype. It is not intended for clinical or diagnostic use.
-
-## Features
-
-### Reaction Time Experiment
-
-- Visual stimulus presentation
-- Keyboard response collection
-- Reaction-time measurement using `performance.now()`
-- Premature-response detection
-- Multiple experimental trials
-- Fixed and random foreperiod conditions
-- Practice trials
+- Reaction-time and accuracy measurements
 - Condition-specific descriptive statistics
+- JSON and CSV data export
+- Python/Pandas analysis pipeline for Stroop data
+- Browser-to-Python reproducibility checks
+- Matplotlib behavioral-data visualizations
+- Jupyter Notebook analysis report
+
+The browser experiments are implemented with:
+
+- HTML
+- CSS
+- JavaScript
+
+The analysis workflow uses:
+
+- Python
+- Pandas
+- Matplotlib
+- Jupyter Notebook
+
+to validate, summarize, visualize, and interpret exported behavioral data.
+
+CogLab is an educational, research-oriented, and portfolio-focused project.
+It is not intended for clinical or diagnostic use.
+
+---
+
+# Experiments
+
+## Reaction Time Experiment
+
+The Reaction Time Experiment investigates whether temporal predictability
+affects response speed.
+
+Participants respond to a visual stimulus as quickly as possible.
+
+The experiment includes:
+
+- visual stimulus presentation
+- keyboard response collection
+- reaction-time measurement using `performance.now()`
+- premature-response detection
+- practice trials
+- fixed and random foreperiod conditions
+- randomized experimental structure
+- condition-specific descriptive statistics
 - JSON and CSV export
 
-### Reaction Time Practice Phase
+---
 
-Participants complete 3 practice trials before beginning the experiment.
+## Reaction Time Practice Phase
 
-Practice trials are excluded from experimental results, statistical
-calculations, and exported datasets.
+Participants complete **3 practice trials** before beginning the experiment.
 
-### Reaction Time Experimental Conditions
+Practice trials are excluded from:
 
-The experiment includes two conditions.
+- experimental results
+- statistical calculations
+- exported datasets
 
-#### Fixed Foreperiod
+---
+
+## Reaction Time Experimental Conditions
+
+The experiment contains two experimental conditions.
+
+### Fixed Foreperiod
 
 - 10 trials
-- Stimulus appears after 3000 ms
+- stimulus appears after 3000 ms
 
-#### Random Foreperiod
+### Random Foreperiod
 
 - 10 trials
-- Foreperiod values: 1000, 2000, 3000, 4000, and 5000 ms
-- Each value occurs twice
-- Trial order is randomized
+- foreperiod values:
+
+  - 1000 ms
+  - 2000 ms
+  - 3000 ms
+  - 4000 ms
+  - 5000 ms
+
+- each foreperiod value occurs twice
+- trial order is randomized
 
 The order of the two experimental blocks is randomized at the beginning of
 each session.
 
-The total Reaction Time experimental session contains 20 recorded trials.
+The complete Reaction Time experimental session therefore contains:
+
+**20 recorded experimental trials**
 
 ---
 
-### Stroop Experiment
+# Stroop Experiment
 
-The Stroop Experiment measures response accuracy and reaction time under
-congruent and incongruent color-word conditions.
+The Stroop Experiment investigates cognitive interference by comparing
+congruent and incongruent color-word trials.
 
-Participants respond to the **ink color** of the displayed word using the
-keyboard:
+Participants are instructed to respond to the **ink color** of the displayed
+word rather than the meaning of the word.
+
+Keyboard responses:
 
 - `R` = Red
 - `G` = Green
@@ -103,31 +143,39 @@ The experiment includes:
 - 24 experimental trials
 - 12 congruent trials
 - 12 incongruent trials
-- Randomized trial order
-- Accuracy measurement
-- Reaction-time measurement
-- Condition-specific descriptive statistics
+- randomized trial order
+- response-accuracy measurement
+- reaction-time measurement
+- descriptive statistics
 - Stroop-effect calculation
-- JSON and CSV export
+- JSON export
+- CSV export
 
-### Stroop Practice Phase
+---
 
-Participants complete 6 practice trials before beginning the experimental
+## Stroop Practice Phase
+
+Participants complete **6 practice trials** before beginning the experimental
 phase.
 
-The practice set contains:
+The practice phase contains:
 
 - 3 congruent trials
 - 3 incongruent trials
 
-Participants receive correct or incorrect feedback during practice.
+Participants receive immediate correct or incorrect feedback during practice.
 
-Practice trials are excluded from experimental results, statistical
-calculations, and exported datasets.
+Practice trials are excluded from:
 
-### Stroop Experimental Conditions
+- experimental results
+- statistical calculations
+- exported datasets
 
-#### Congruent
+---
+
+## Stroop Experimental Conditions
+
+### Congruent
 
 The word meaning and ink color are the same.
 
@@ -135,7 +183,7 @@ Example:
 
 `RED` displayed in red.
 
-#### Incongruent
+### Incongruent
 
 The word meaning and ink color are different.
 
@@ -143,62 +191,78 @@ Example:
 
 `RED` displayed in blue.
 
-The experimental session contains exactly 24 recorded trials:
+The experimental session contains exactly:
 
-- 12 congruent
-- 12 incongruent
+- 12 congruent trials
+- 12 incongruent trials
 
-Trial order is randomized for each session.
+for a total of:
 
-## Research Questions
+**24 recorded experimental trials**
 
-### Reaction Time Experiment
+Trial order is randomized for each experimental session.
 
-**Research question:**
+---
 
-Does temporal predictability affect reaction time?
+# Research Questions
 
-**Independent Variable:** Foreperiod predictability
+## Reaction Time Experiment
 
-**Dependent Variable:** Reaction time in milliseconds
+### Research Question
 
-The experiment compares reaction-time measurements between fixed and random
-foreperiod conditions.
+**Does temporal predictability affect reaction time?**
 
-### Stroop Experiment
+### Independent Variable
 
-**Research question:**
+Foreperiod predictability:
 
-Does color-word incongruence increase reaction time relative to congruent
-trials?
+- Fixed
+- Random
 
-**Independent Variable:** Stroop condition
+### Dependent Variable
+
+Reaction time in milliseconds.
+
+The experiment compares reaction-time measurements between the fixed and
+random foreperiod conditions.
+
+---
+
+## Stroop Experiment
+
+### Research Question
+
+**Does color-word incongruence increase reaction time relative to congruent
+trials?**
+
+### Independent Variable
+
+Stroop condition:
 
 - Congruent
 - Incongruent
 
-**Dependent Variables:**
+### Dependent Variables
 
-- Reaction time in milliseconds
-- Response accuracy
+- reaction time in milliseconds
+- response accuracy
 
-The current implementation is an educational experimental prototype. It is
-not a validated clinical, diagnostic, or standardized psychological
-assessment.
+---
 
-## Descriptive Statistics
+# Behavioral Data Collection
 
-### Reaction Time Experiment
+CogLab collects behavioral data at the individual-trial level.
 
-CogLab calculates the following statistics separately for each experimental
-condition:
+This allows each experimental response to be inspected and analyzed
+independently.
 
-- Mean reaction time
-- Median reaction time
-- Sample standard deviation
-
-The application also calculates the difference between the two condition
-means:
+For the Stroop experiment, exported trial-level data contains:
 
 ```text
-Random Mean RT - Fixed Mean RT
+trial
+word
+inkColor
+condition
+response
+correct
+reactionTime
